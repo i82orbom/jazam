@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>JavaShazam</groupId>
+  <artifactId>JavaShazam</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <repositories>
+  	<repository>
+    
+      <id>central</id>
+      <url>http://repo1.maven.org/maven2</url>
+      
+    </repository>
+    
+ 	<repository>
+    	<id>xuggle repo</id>
+    	<url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+    </repository>
+    
+ 
+
+ </repositories>
+  
+ 
+  <dependencies>
+   	
+
+  	<dependency>
+   		<groupId>xuggle</groupId>
+   		<artifactId>xuggle-xuggler</artifactId>
+   		<version>5.2</version>
+  	</dependency>
+
+
+  	<dependency>
+  		<groupId>com.googlecode.soundlibs</groupId>
+  		<artifactId>soundlibs</artifactId>
+  		<version>1.2</version>
+  		<type>pom</type>
+  	</dependency>
+
+  	<dependency>
+  		<groupId>com.googlecode.soundlibs</groupId>
+  		<artifactId>tritonus-share</artifactId>
+  		<version>0.3.7-2</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.googlecode.soundlibs</groupId>
+  		<artifactId>mp3spi</artifactId>
+  		<version>1.9.5-1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.googlecode.soundlibs</groupId>
+  		<artifactId>jlayer</artifactId>
+  		<version>1.0.1-1</version>
+  	</dependency>
+
+
+
+  	<dependency>
+  		<groupId>audio-analysis</groupId>
+  		<artifactId>audio-analysis</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	
+  </dependencies>
+  
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    
+  </build>
+</project>
