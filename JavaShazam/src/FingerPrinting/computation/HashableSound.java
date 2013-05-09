@@ -1,12 +1,7 @@
 package FingerPrinting.computation;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import sound.Mp3DecoderAA;
 import sound.Mp3FileSoundLib;
 import sound.UnsuportedSampleRateException;
 
