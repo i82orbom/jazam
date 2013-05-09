@@ -38,10 +38,10 @@ public class HashableSound {
 			ArrayList<ArrayList<Long>> hashes = new ArrayList<ArrayList<Long>>();
 			
 			byte[] buff = null;
-			while( (buff = _input.getSampleBySecond((float) 1.0)) != null ){
+			while( (buff = _input.getSampleBySecond((float)2.0)) != null ){
 				
 		
-				FastFourierTransform fftize = new FastFourierTransform(buff);
+				FastFourierTransform fftize = new FastFourierTransform(byteToShortArray(buff));
 				Complex[][] fftResult = fftize.getFFTResult();	
 				//System.out.println("FFTResult length: " + fftResult.length);
 				hashes.add(filterAndHash(fftResult));
@@ -50,6 +50,21 @@ public class HashableSound {
 		}
 		else
 			throw new RuntimeException("No input specified.");
+	}
+	
+	public short[] byteToShortArray(byte[] array){
+		short[] result = new short[array.length/2];
+		
+		for(int i = 0; i < result.length;++i){
+			byte lo = array[i*2];
+			byte hi = array[i*2+1];
+			
+			short val=(short)( ((hi&0xFF)<<8) | (lo&0xFF) );
+
+			result[i] = val;
+		}
+		
+		return result;
 	}
 	
 	public byte[] arrayUnion(byte[] a1, byte[] a2){
