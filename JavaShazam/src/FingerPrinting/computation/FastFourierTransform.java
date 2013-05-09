@@ -3,7 +3,7 @@ package FingerPrinting.computation;
 
 public class FastFourierTransform {
 
-	public static int CHUNK_SIZE = 2048;
+	public static int CHUNK_SIZE = 131072;
      
 	private Complex[][] fftResult;
 	
