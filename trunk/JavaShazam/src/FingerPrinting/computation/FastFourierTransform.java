@@ -11,7 +11,7 @@ public class FastFourierTransform {
 		return fftResult;
 	}
 
-	public FastFourierTransform(byte[] sample){
+	public FastFourierTransform(short[] sample){
 		final int totalSize = sample.length;
 		
 		int amountPossible = totalSize/CHUNK_SIZE;
