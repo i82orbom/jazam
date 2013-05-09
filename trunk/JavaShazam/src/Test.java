@@ -8,7 +8,7 @@ import javazoom.jl.converter.Converter;
 import javazoom.jl.decoder.Decoder.Params;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.decoder.OutputChannels;
-import sound.UnsuportedSampleRateException;
+import sound.exceptions.UnsuportedSampleRateException;
 import FingerPrinting.computation.HashableSound;
 import FingerPrinting.description.MPEG7Description;
 
@@ -16,21 +16,12 @@ import FingerPrinting.description.MPEG7Description;
 public class Test {
 	
 	public static void main(String...args) throws UnsuportedSampleRateException, FileNotFoundException, JavaLayerException{
-		String inputFile = "Sehnsucht with Xavier Naidoo.mp3";
-		String outputXMLFile = "Sehnsucht with Xavier Naidoo.xml";
+	//	String inputFile = "Sehnsucht with Xavier Naidoo.mp3";
+	//String outputXMLFile = "Sehnsucht with Xavier Naidoo.xml";
 		
-//		String inputFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.mp3";
-	//	String outputXMLFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.xml";
-		
-	/*	String tempFile = "converted.wav";
-		
-		Converter cv = new Converter();
-		Params par = new Params();
-		par.setOutputChannels(OutputChannels.fromInt(OutputChannels.DOWNMIX_CHANNELS));
-		
-		cv.convert(inputFile, tempFile, null, par);
-		
-		inputFile = tempFile;*/
+		String inputFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.mp3";
+	String outputXMLFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.xml";
+	
 		
 		long currentTime = System.currentTimeMillis();
 

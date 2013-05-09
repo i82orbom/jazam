@@ -2,8 +2,8 @@ package FingerPrinting.computation;
 
 import java.util.ArrayList;
 
-import sound.Mp3FileSoundLib;
-import sound.UnsuportedSampleRateException;
+import sound.InputSoundDecoder;
+import sound.exceptions.UnsuportedSampleRateException;
 
 public class HashableSound {
 
@@ -18,11 +18,11 @@ public class HashableSound {
 	private int[] RANGE = new int[]{LOWER_LIMIT,120,180, UPPER_LIMIT+1};
 
 	
-	private Mp3FileSoundLib _input = null;
+	private InputSoundDecoder _input = null;
 	
 	public HashableSound(String fileName) throws UnsuportedSampleRateException {
 		try {
-			this._input = new Mp3FileSoundLib(fileName);
+			this._input = new InputSoundDecoder(fileName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,22 +38,10 @@ public class HashableSound {
 			ArrayList<ArrayList<Long>> hashes = new ArrayList<ArrayList<Long>>();
 			
 			byte[] buff = null;
-			while( (buff = _input.getSamples()) != null ){
+			while( (buff = _input.getSampleBySecond((float) 1.0)) != null ){
 				
-				/** Convert to mono */
-				
-				byte[] mono = new byte[buff.length/2];
-				for (int i = 0; i < mono.length/2; ++i){
-					int left = (buff[i*4] << 8) | (buff[i*4 + 1] & 0xff);
-					int right = (buff[i*4 + 2] << 8) | (buff[i*4 + 3] & 0xff);
-					int avg = (left + right) / 2;
-					short m = (short)avg;
-					mono[i*2]= (byte)((short)(m>>8));
-					mono[i*2 + 1] = (byte)(m & 0xff);
-				}
-				
-				
-				FastFourierTransform fftize = new FastFourierTransform(mono);
+		
+				FastFourierTransform fftize = new FastFourierTransform(buff);
 				Complex[][] fftResult = fftize.getFFTResult();	
 				//System.out.println("FFTResult length: " + fftResult.length);
 				hashes.add(filterAndHash(fftResult));
@@ -64,6 +52,35 @@ public class HashableSound {
 			throw new RuntimeException("No input specified.");
 	}
 	
+	public byte[] arrayUnion(byte[] a1, byte[] a2){
+		byte[] total = new byte[a1.length+a2.length];
+		int idx = 0;
+		for (int i = 0 ; i < a1.length; ++i){
+			total[idx] = a1[i];
+			idx++;
+		}
+		for (int i = 0 ; i < a2.length; ++i){
+			total[idx] = a2[i];
+			idx++;
+		}
+		return total;
+	}
+	
+	public byte[] toMono(byte[] stereo){
+		byte[] mono = new byte[stereo.length/2];
+		
+		int HI = 1; int LO = 0; /** Big endian, or little endian, who knows */
+
+		for (int i = 0 ; i < mono.length/2; ++i){
+			int left = (stereo[i * 4 + HI] << 8) | (stereo[i * 4 + LO] & 0xff);
+	        int right = (stereo[i * 4 + 2 + HI] <<8) | (stereo[i * 4 + 2 + LO] & 0xff);
+	        int avg = (left + right) / 2;
+	        mono[i * 2 + HI] = (byte)((avg >> 8) & 0xff);
+	        mono[i * 2 + LO] = (byte)(avg & 0xff);
+		}
+		
+		return mono;
+	}
 
 	private ArrayList<Long> filterAndHash(Complex[][] fft){
 		

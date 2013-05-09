@@ -5,13 +5,10 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import javazoom.jl.converter.Converter;
-import javazoom.jl.decoder.Decoder.Params;
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.decoder.OutputChannels;
-import sound.Mp3FileSoundLib;
-import sound.UnsuportedSampleRateException;
-import sound.WAVReader;
+import sound.InputSoundDecoder;
+import sound.exceptions.UnsuportedSampleRateException;
+import sound.wav.WAVReader;
 
 
 public class CopyOfTest {
@@ -30,7 +27,7 @@ public class CopyOfTest {
 		
 		long currentTime = System.currentTimeMillis();
 
-		Mp3FileSoundLib decod = new Mp3FileSoundLib(inputFile);
+		InputSoundDecoder decod = new InputSoundDecoder(inputFile);
 		byte[] samples;
 		PrintWriter pw = new PrintWriter(new File("output1.txt"));
 		
@@ -42,17 +39,23 @@ public class CopyOfTest {
 			}
 			pw.println();*/
 		//	ar.add(samples);
-			
+		//	if (samples[0] != 0)
+	//			System.out.println("");
+			int HI = 1; int LO = 0;
+
 			byte[] mono = new byte[samples.length/2];
 			for (int i = 0; i < mono.length/2; ++i){
-				int left = (samples[i*4] << 8) | (samples[i*4 + 1] & 0xff);
-				int right = (samples[i*4 + 2] << 8) | (samples[i*4 + 3] & 0xff);
-				int avg = (left + right) / 2;
-				short m = (short)avg;
-				mono[i*2]= (byte)((short)(m>>8));
-				mono[i*2 + 1] = (byte)(m & 0xff);
-			
 				
+
+					int left = (samples[i * 4 + HI] << 8) | (samples[i * 4 + LO] & 0xff);
+			        int right = (samples[i * 4 + 2 + HI] <<8) | (samples[i * 4 + 2 + LO] & 0xff);
+			        int avg = (left + right) / 2;
+			        mono[i * 2 + HI] = (byte)((avg >> 8) & 0xff);
+			        mono[i * 2 + LO] = (byte)(avg & 0xff);
+				
+				
+			      
+							
 			}
 			ar.add(mono);
 			qtty += mono.length;
