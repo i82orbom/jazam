@@ -3,35 +3,34 @@ package FingerPrinting.computation;
 
 public class FastFourierTransform {
 
-	public static int CHUNK_SIZE = 32768; /** For a 400ms slice */
-     
-	private Complex[][] fftResult;
+    public static int CHUNK_SIZE = 32768; /** For a 400ms slice */
+	//public static int CHUNK_SIZE = 4096;
+ 
 	
-	public Complex[][] getFFTResult() {
-		return fftResult;
-	}
-
-	public FastFourierTransform(short[] sample){
+	public static Complex[] fourierTransform(short[] sample){
 		final int totalSize = sample.length;
 		
-		int amountPossible = totalSize/CHUNK_SIZE;
+		int amountPossible = 0;
 		
-		fftResult = new Complex[amountPossible][];
-		
-		for (int times = 0; times < amountPossible; ++times){
-			Complex[] complex = new Complex[CHUNK_SIZE];
-			
-			for (int i = 0; i < CHUNK_SIZE; ++i){
-				complex[i] = new Complex(sample[(times*CHUNK_SIZE)+i],0);
-			}
-			
-			fftResult[times] = fft(complex);
-			
+		while (amountPossible == 0 && CHUNK_SIZE > 0){
+			amountPossible = totalSize/CHUNK_SIZE;
+			CHUNK_SIZE /= 2;
 		}
+		
+		CHUNK_SIZE *= 2;
+		
+		
+		Complex[] complex = new Complex[CHUNK_SIZE];
+			
+		for (int i = 0; i < CHUNK_SIZE; ++i){
+			complex[i] = new Complex(sample[i],0);
+		}
+			
+		return fft(complex);		
 	}
 	
 	 // compute the FFT of x[], assuming its length is a power of 2
-    private Complex[] fft(Complex[] x) {
+    private static Complex[] fft(Complex[] x) {
         int N = x.length;
       
 

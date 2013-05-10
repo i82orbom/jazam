@@ -1,6 +1,7 @@
 package FingerPrinting.description;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,6 +14,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 public class XMLFile {
 
@@ -42,5 +44,13 @@ public class XMLFile {
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.transform(source, result);
+	}
+	
+	public void loadFromFile(String inputFileName) throws ParserConfigurationException, SAXException, IOException{
+		this._inputFileName = inputFileName;
+		this.docFactory = DocumentBuilderFactory.newInstance();
+		this.docBuilder = this.docFactory.newDocumentBuilder();
+		this.doc = this.docBuilder.parse(new File(this._inputFileName));
+		this.doc.getDocumentElement().normalize();
 	}
 }
