@@ -10,6 +10,7 @@ public class MPEG7Description extends XMLFile {
 
 	private Element rootElement;
 	private Element audioElement;
+	private int timeStampStep;
 	
 	public void createNewFile(String outputFileName) throws ParserConfigurationException
 	{
@@ -34,6 +35,7 @@ public class MPEG7Description extends XMLFile {
 	}
 	
 	public void setFingerPrint(ArrayList<ArrayList<Long>> list){
+		int currentTimeStamp = 0;
 		int iSize = list.size() - 1;
 		for (int i = 0; i < iSize; ++i){
 			ArrayList<Long> value = list.get(i);
@@ -44,7 +46,12 @@ public class MPEG7Description extends XMLFile {
 			for (int j = 1; j < iValueSize; ++j){
 				dump.append(","+value.get(j).longValue());
 			}
-			setFingerPrint(new String(""+i), dump.toString());
+			setFingerPrint(new String(""+currentTimeStamp), dump.toString());
+			currentTimeStamp += this.timeStampStep;
 		}
+	}
+
+	public void setTimeStampStep(int timeStampStep) {
+		this.timeStampStep = timeStampStep;
 	}
 }
