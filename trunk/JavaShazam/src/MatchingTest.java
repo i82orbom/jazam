@@ -12,8 +12,8 @@ public class MatchingTest {
 		MPEG7Description original = new MPEG7Description();
 		MPEG7Description record = new MPEG7Description();
 		try {
-			original.loadFromFile("Sehnsucht with Xavier Naidoo.xml");
-			record.loadFromFile("sub_(40-60)_Sehnsucht with Xavier Naidoo.xml");
+			original.loadFromFile("Wait In Vain (Avicii Remix).xml");
+			record.loadFromFile("rec.xml");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

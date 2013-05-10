@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import sound.RunSampling;
 import sound.exceptions.UnsuportedSampleRateException;
 import sound.wav.WAVReader;
 import FingerPrinting.computation.HashableSound;
@@ -14,15 +13,9 @@ import FingerPrinting.description.MPEG7Description;
 public class MicTest {
 
 	public static void main (String...args) throws UnsuportedSampleRateException{
-		byte[] micData = RunSampling.runSampling();
 		
-	/*	for (int i = 0 ; i < micData.length; ++i){
-			System.out.println(micData[i]);
-		}
-		*/
-		WAVReader.writeWav(micData, 44100, new File("rec.wav"));
-		
-		HashableSound hs = new HashableSound("rec.wav");
+	
+		HashableSound hs = new HashableSound(null,true);
 		
 		ArrayList<Long> hashes = hs.calculateHashesPerSecond(400); /** 400 ms */
 		String outputXMLFile = "rec.xml";
