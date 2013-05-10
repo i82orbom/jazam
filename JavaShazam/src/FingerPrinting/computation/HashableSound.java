@@ -11,11 +11,11 @@ public class HashableSound {
 	 * Hashing variables
 	 * 
 	 */
-	private final int LOWER_LIMIT = 80;
+	private final int LOWER_LIMIT = 40;
 	private final int UPPER_LIMIT = 300;
 	private final int FUZ_FACTOR = 2;
 
-	private int[] RANGE = new int[]{LOWER_LIMIT,120,180, UPPER_LIMIT+1};
+	private int[] RANGE = new int[]{LOWER_LIMIT,80,120,180, UPPER_LIMIT+1};
 
 	private int requiredBytes1Second;
 	
@@ -48,20 +48,17 @@ public class HashableSound {
 	 * Calculate _input sound hashes
 	 * @param iSecondStep specifies how many seconds would be in a single sample
 	 */
-	public ArrayList<ArrayList<Long>> calculateHashesPerSecond(int iMiliseconds){
+	public ArrayList<Long> calculateHashesPerSecond(int iMiliseconds){
 		
 		int bytesToRetrieve = (iMiliseconds*this.requiredBytes1Second)/1000;
 		
 		if (_input != null){
-			ArrayList<ArrayList<Long>> hashes = new ArrayList<ArrayList<Long>>();
+			ArrayList<Long> hashes = new ArrayList<Long>();
 			
 			byte[] buff = null;
 			while( (buff = _input.getSamples(bytesToRetrieve)) != null ){
-				
 		
-				FastFourierTransform fftize = new FastFourierTransform(byteToShortArray(buff));
-				Complex[][] fftResult = fftize.getFFTResult();	
-				//System.out.println("FFTResult length: " + fftResult.length);
+				Complex[] fftResult = FastFourierTransform.fourierTransform(byteToShortArray(buff));
 				hashes.add(filterAndHash(fftResult));
 			}
 			return hashes;
@@ -85,20 +82,6 @@ public class HashableSound {
 		return result;
 	}
 	
-	public byte[] arrayUnion(byte[] a1, byte[] a2){
-		byte[] total = new byte[a1.length+a2.length];
-		int idx = 0;
-		for (int i = 0 ; i < a1.length; ++i){
-			total[idx] = a1[i];
-			idx++;
-		}
-		for (int i = 0 ; i < a2.length; ++i){
-			total[idx] = a2[i];
-			idx++;
-		}
-		return total;
-	}
-	
 	public byte[] toMono(byte[] stereo){
 		byte[] mono = new byte[stereo.length/2];
 		
@@ -115,7 +98,8 @@ public class HashableSound {
 		return mono;
 	}
 
-	private ArrayList<Long> filterAndHash(Complex[][] fft){
+	private long filterAndHash(Complex[] fft){
+		
 		
 		double[] highscores = new double[RANGE.length-1];
 		int[] recordPoints = new int[RANGE.length-1];
@@ -124,32 +108,21 @@ public class HashableSound {
 			highscores[i] = -1;
 			recordPoints[i] = -1;
 		}
-		
-		
-		ArrayList<Long> hashes = new ArrayList<Long>();
-		for (int i = 0; i < fft.length; ++i){
-		
-			//System.out.println("Freq amount: " + fft[i].length);
-				
-			for (int freq = LOWER_LIMIT; freq < UPPER_LIMIT-1; freq++){
-				double mag = Math.log(fft[i][freq].abs() +1);
+			
+		for (int freq = LOWER_LIMIT; freq < UPPER_LIMIT-1; freq++){
+			double mag = Math.log(fft[freq].abs() +1);
 					
-				int index = getIndex(freq);
-			//	System.out.println("Freq: " + freq + " index: " + index);
+			int index = getIndex(freq);
 					
-				if (mag > highscores[index]){
-					highscores[index] = mag;
-					recordPoints[index] = freq;
-				}
-							
+			if (mag > highscores[index]){
+				highscores[index] = mag;
+				recordPoints[index] = freq;
 			}
-
-			hashes.add(hash(recordPoints));
-
+							
 		}
-		return hashes;
+		
+		return hash(recordPoints);
 	}
-
 	
 	private long hash(int []p){
 		int multiplyFactor = 100;
