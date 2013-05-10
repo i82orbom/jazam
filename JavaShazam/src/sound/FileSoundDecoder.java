@@ -8,7 +8,7 @@ import javax.sound.sampled.AudioSystem;
 
 import sound.exceptions.UnsuportedSampleRateException;
 
-public class InputSoundDecoder {
+public class FileSoundDecoder extends InputSound {
 
 	private int BUFFER_SIZE;
 
@@ -22,7 +22,7 @@ public class InputSoundDecoder {
 	
 	
 
-	public InputSoundDecoder(String fileName) throws UnsuportedSampleRateException{
+	public FileSoundDecoder(String fileName) throws UnsuportedSampleRateException{
 		this._inputFileName = fileName;
 		this._soundFile = new File(this._inputFileName);
 		try{

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javazoom.jl.decoder.JavaLayerException;
-import sound.InputSoundDecoder;
+import sound.FileSoundDecoder;
 import sound.exceptions.UnsuportedSampleRateException;
 import sound.wav.WAVReader;
 
@@ -27,7 +27,7 @@ public class CopyOfTest {
 		
 		long currentTime = System.currentTimeMillis();
 
-		InputSoundDecoder decod = new InputSoundDecoder(inputFile);
+		FileSoundDecoder decod = new FileSoundDecoder(inputFile);
 		byte[] samples;
 		PrintWriter pw = new PrintWriter(new File("output1.txt"));
 		

@@ -2,7 +2,9 @@ package FingerPrinting.computation;
 
 import java.util.ArrayList;
 
-import sound.InputSoundDecoder;
+import sound.FileSoundDecoder;
+import sound.InputSound;
+import sound.MicSoundDecoder;
 import sound.exceptions.UnsuportedSampleRateException;
 
 public class HashableSound {
@@ -19,11 +21,15 @@ public class HashableSound {
 
 	private int requiredBytes1Second;
 	
-	private InputSoundDecoder _input = null;
+	private InputSound _input = null;
 	
-	public HashableSound(String fileName) throws UnsuportedSampleRateException {
+	public HashableSound(String fileName, boolean mic) throws UnsuportedSampleRateException {
 		try {
-			this._input = new InputSoundDecoder(fileName);
+			if (mic)
+				this._input = new MicSoundDecoder();
+			else
+				this._input = new FileSoundDecoder(fileName);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,7 +63,7 @@ public class HashableSound {
 			
 			byte[] buff = null;
 			while( (buff = _input.getSamples(bytesToRetrieve)) != null ){
-		
+
 				Complex[] fftResult = FastFourierTransform.fourierTransform(byteToShortArray(buff));
 				hashes.add(filterAndHash(fftResult));
 			}
@@ -82,21 +88,7 @@ public class HashableSound {
 		return result;
 	}
 	
-	public byte[] toMono(byte[] stereo){
-		byte[] mono = new byte[stereo.length/2];
-		
-		int HI = 1; int LO = 0; /** Big endian, or little endian, who knows */
 
-		for (int i = 0 ; i < mono.length/2; ++i){
-			int left = (stereo[i * 4 + HI] << 8) | (stereo[i * 4 + LO] & 0xff);
-	        int right = (stereo[i * 4 + 2 + HI] <<8) | (stereo[i * 4 + 2 + LO] & 0xff);
-	        int avg = (left + right) / 2;
-	        mono[i * 2 + HI] = (byte)((avg >> 8) & 0xff);
-	        mono[i * 2 + LO] = (byte)(avg & 0xff);
-		}
-		
-		return mono;
-	}
 
 	private long filterAndHash(Complex[] fft){
 		
