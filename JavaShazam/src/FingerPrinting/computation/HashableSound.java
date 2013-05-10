@@ -66,8 +66,13 @@ public class HashableSound {
 
 				Complex[] fftResult = FastFourierTransform.fourierTransform(byteToShortArray(buff));
 				hashes.add(filterAndHash(fftResult));
+				fftResult = null;
+				buff = null;
 			}
+			this._input = null;
+
 			return hashes;
+			
 		}
 		else
 			throw new RuntimeException("No input specified.");
