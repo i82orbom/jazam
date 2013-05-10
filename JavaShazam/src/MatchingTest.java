@@ -12,8 +12,8 @@ public class MatchingTest {
 		MPEG7Description original = new MPEG7Description();
 		MPEG7Description record = new MPEG7Description();
 		try {
-			original.loadFromFile("Wait In Vain (Avicii Remix).xml");
-			record.loadFromFile("Sehnsucht with Xavier Naidoo.xml");
+			original.loadFromFile("Sehnsucht with Xavier Naidoo.xml");
+			record.loadFromFile("sub_(40-60)_Sehnsucht with Xavier Naidoo.xml");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -22,12 +22,8 @@ public class MatchingTest {
 		List<DataPoint> originalData = original.getData();
 		List<DataPoint> recordData = record.getData();
 		
-		if(Matcher.match(originalData, recordData)){
-			System.out.println("MATCH!");
-		}
-		else{
-			System.out.println("NO MATCH AT ALL!");
-		}
+		System.out.println("MATCHING SCORE: " + Matcher.match(originalData, recordData));
+		
 		
 	}
 }
