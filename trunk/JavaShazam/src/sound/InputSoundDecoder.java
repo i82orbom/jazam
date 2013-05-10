@@ -10,8 +10,7 @@ import sound.exceptions.UnsuportedSampleRateException;
 
 public class InputSoundDecoder {
 
-	private int BUFFER_SIZE = 128000;
-	private int DECODED_AUDIO_SECOND_SIZE = 176375; /** bytes */
+	private int BUFFER_SIZE;
 
 	private String _inputFileName;
 	private File _soundFile;
@@ -20,6 +19,8 @@ public class InputSoundDecoder {
 	private AudioFormat _decodedFormat;
 	private AudioInputStream _audioInputDecodedStream;
 	private byte[] _residualBuffer;
+	
+	
 
 	public InputSoundDecoder(String fileName) throws UnsuportedSampleRateException{
 		this._inputFileName = fileName;
@@ -78,9 +79,9 @@ public class InputSoundDecoder {
 			return null;
 	}
 	
-	public byte[] getSampleBySecond(float seconds){
+	public byte[] getSamples(int sampleQtty){
 		/** If there is still some residual data in the buffer, treat it */
-		byte[] buffer = new byte[ (int)(seconds * this.DECODED_AUDIO_SECOND_SIZE)];
+		byte[] buffer = new byte[sampleQtty];
 		int bufferPointer = 0;
 		boolean done = false;
 		
@@ -161,5 +162,10 @@ public class InputSoundDecoder {
 		}
 		
 		return mono;
+	}
+	
+
+	public float getOutputSampleRate(){
+		return this._decodedFormat.getSampleRate();
 	}
 }

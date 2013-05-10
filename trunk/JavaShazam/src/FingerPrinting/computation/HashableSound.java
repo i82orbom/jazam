@@ -17,6 +17,7 @@ public class HashableSound {
 
 	private int[] RANGE = new int[]{LOWER_LIMIT,120,180, UPPER_LIMIT+1};
 
+	private int requiredBytes1Second;
 	
 	private InputSoundDecoder _input = null;
 	
@@ -27,18 +28,35 @@ public class HashableSound {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		switch((int)this._input.getOutputSampleRate()){
+		
+		case 44100:
+				this.requiredBytes1Second = 176375;
+			break;
+			
+		case 22050:
+				this.requiredBytes1Second = 88187;
+			break;
+			
+		default:
+			throw new  UnsuportedSampleRateException((int)this._input.getOutputSampleRate());
+		}
 	}
 	
 	/** 
 	 * Calculate _input sound hashes
 	 * @param iSecondStep specifies how many seconds would be in a single sample
 	 */
-	public ArrayList<ArrayList<Long>> calculateHashesPerSecond(int iSecondStep){
+	public ArrayList<ArrayList<Long>> calculateHashesPerSecond(int iMiliseconds){
+		
+		int bytesToRetrieve = (iMiliseconds*this.requiredBytes1Second)/1000;
+		
 		if (_input != null){
 			ArrayList<ArrayList<Long>> hashes = new ArrayList<ArrayList<Long>>();
 			
 			byte[] buff = null;
-			while( (buff = _input.getSampleBySecond((float)2.0)) != null ){
+			while( (buff = _input.getSamples(bytesToRetrieve)) != null ){
 				
 		
 				FastFourierTransform fftize = new FastFourierTransform(byteToShortArray(buff));
