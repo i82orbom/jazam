@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Matcher {
 
-	public static boolean match(List<DataPoint> original, List<DataPoint> record){
+	public static int match(List<DataPoint> original, List<DataPoint> record){
 		
 		int iOriginalSize = original.size();
 		int iRecordSize = record.size();
@@ -51,7 +51,7 @@ public class Matcher {
 			}
 			else{
 				/** No two consecutive matches */
-			//	System.out.println("No two consecutive matches...\n NO MATCH AT ALL!");
+			//	System.out.println("No two consecutive matches found");
 			//	done = true;
 			}
 			
@@ -66,6 +66,7 @@ public class Matcher {
 		ArrayList<Integer> offsetQtty = new ArrayList<Integer>();
 		int j;
 		done = false;
+		int highestAmountOffsetFound = -1;
 		for (int i = iRecordIdxPost; i < iRecordSize && done == false; ++i){
 			/** If I go trough 50 fingerprints from the original list, without finding match, give up */
 			long recordFingerPrint = record.get(i).getFingerprint();
@@ -84,18 +85,29 @@ public class Matcher {
 					}
 					else{
 						int currentOffsetQtty = offsetQtty.get(idxValue) + 1;
+						if (highestAmountOffsetFound < currentOffsetQtty){
+							highestAmountOffsetFound = currentOffsetQtty;
+						}
 						offsetQtty.set(idxValue, currentOffsetQtty);
 						
 						if (currentOffsetQtty == OFFSET_MATCH_THRESHOLD){
 							done = true;
-							return true;
+							return highestAmountOffsetFound;
+							
 						}
+//						System.out.println("===============");
+//						for(int k = 0; k < offsetQtty.size(); ++k){
+//							System.out.println("OFFSET: " + listOffsets.get(k) + " >> " + offsetQtty.get(k));
+//						}
 					}
+					
+				
 				}
+				
 			}
 			//iOriginalIdxPost = j;
 		}
 		
-		return false;
+		return highestAmountOffsetFound;
 	}
 }
