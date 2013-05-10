@@ -53,10 +53,10 @@ public class FileSoundDecoder extends InputSound {
 				throw new UnsuportedSampleRateException((int)this._audioInputFormat.getSampleRate());
 		}
 		
-		System.out.println ("# Channels: " + this._decodedFormat.getChannels());
-		System.out.println ("Sample size (bits): " + this._decodedFormat.getSampleSizeInBits());
-		System.out.println ("Frame size: " + this._decodedFormat.getFrameSize());
-		System.out.println ("Frame rate: " + this._decodedFormat.getFrameRate());
+//		System.out.println ("# Channels: " + this._decodedFormat.getChannels());
+//		System.out.println ("Sample size (bits): " + this._decodedFormat.getSampleSizeInBits());
+//		System.out.println ("Frame size: " + this._decodedFormat.getFrameSize());
+//		System.out.println ("Frame rate: " + this._decodedFormat.getFrameRate());
 
 	}
 	

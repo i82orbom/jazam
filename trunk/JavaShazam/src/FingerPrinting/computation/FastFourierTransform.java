@@ -8,7 +8,7 @@ public class FastFourierTransform {
  
 	
 	public static Complex[] fourierTransform(short[] sample){
-		final int totalSize = sample.length;
+		int totalSize = sample.length;
 		
 		int amountPossible = 0;
 		
