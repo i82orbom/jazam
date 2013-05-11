@@ -11,15 +11,15 @@ import FingerPrinting.description.MPEG7Description;
 
 
 public class CollectionHashExtractor {
-	private static String outputFolder = "hashes/";
 
 	public static void main (String...args) throws UnsuportedSampleRateException{
-		
+		String outputFolder = "hashes/";
+
 		String inputFolder = "collection/";
 		File rootDirectory = new File(inputFolder);
 		String[] itemsInDirectory = rootDirectory.list();
 		
-		for (String itemInDirectory:itemsInDirectory){
+		for (String itemInDirectory : itemsInDirectory){
 			System.err.println("Analyzing: " + itemInDirectory);
 			if (itemInDirectory.endsWith(".mp3")){
 				long currentTime = System.currentTimeMillis();
@@ -38,13 +38,13 @@ public class CollectionHashExtractor {
 					description.setFingerPrint(hashes);
 					hashes = null;
 					description.write();
-					
+					description = null;
 				} catch (ParserConfigurationException e) {
 					e.printStackTrace();
 				} catch (TransformerException e) {
 					e.printStackTrace();
 				}
-				System.gc();
+				Runtime.getRuntime().gc();
 			}
 			
 		}

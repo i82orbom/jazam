@@ -1,113 +1,62 @@
 package FingerPrinting.computation.matching;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Matcher {
 
 	public static int match(List<DataPoint> original, List<DataPoint> record){
 		
+		int highestOffset = -1;
+		int amountOffset = 0;
+		
+		HashMap<Integer,Integer> offsetList = new HashMap<Integer, Integer>();
+		
+		// Assume original list it's bigger than record 
 		int iOriginalSize = original.size();
 		int iRecordSize = record.size();
-		int iOriginalIdx = 5; /** First 5 fingerptins are skipped */
-		boolean done = false;
 		
-		int OFFSET_MATCH_THRESHOLD = 20;
-		int iOriginalIdxPost = 0;
-		int iRecordIdxPost = 0;
-		
-		for (int i = 5 ; i < iRecordSize - 1 && done == false; ++i){ /** First 5 fingerprints of record are skipped */
+		for (int i = 0; i < iOriginalSize; ++i){
+			long cOriginalFP = original.get(i).getFingerprint();
+			int cOriginalTS = original.get(i).getTimestamp();
 			
-			/** First of all find two sucessive matches */
-			int numMatches = 0;
-			
-			while (numMatches != 2 && iOriginalIdx < iOriginalSize){
-				if (original.get(iOriginalIdx).getFingerprint() == record.get(i).getFingerprint()){
-					numMatches++;
-				}
-				iOriginalIdx++;
-				if (numMatches == 1){
-					if (original.get(iOriginalIdx).getFingerprint() == record.get(i+1).getFingerprint()){
-						numMatches++;
-					}
-					else
-						numMatches = 0;
-					
-					iOriginalIdx++;
-				}
-			
-			}
-			if (numMatches == 2){
-				/** At this point we have two matches */
-			//	System.out.println("Found two consecutive matches...");
-			//	System.out.println("Timestamp1(original) = " + original.get(iOriginalIdx-2).getTimestamp() + " // Timestamp1(record) = " + record.get(i).getTimestamp());
-			//	System.out.println("Timestamp2(original) = " + original.get(iOriginalIdx-1).getTimestamp() + " // Timestamp2(record) = " + record.get(i+1).getTimestamp());
-			//	System.out.println("OFFSET: " + (original.get(iOriginalIdx-2).getTimestamp()-record.get(i).getTimestamp()));
-
-				/** KEEP LOOKING from iOriginalIdx */
-				done = true;
-				iOriginalIdxPost = iOriginalIdx;
-				iRecordIdxPost = i;
-			}
-			else{
-				/** No two consecutive matches */
-			//	System.out.println("No two consecutive matches found");
-			//	done = true;
-			}
-			
-			iOriginalIdx = 5;
-		}
-		
-		/** Once this part is done, we have in iOriginalIdxPost-1 the last index where the two consecutives matches were found */
-		/** And in iRecordIdxPost the last index from original record where the fingerprint matched */
-		
-		/** Try to find OFFSET_MATCH_THRESHOLD matches with the same offset */
-		ArrayList<Integer> listOffsets = new ArrayList<Integer>();
-		ArrayList<Integer> offsetQtty = new ArrayList<Integer>();
-		int j;
-		done = false;
-		int highestAmountOffsetFound = -1;
-		for (int i = iRecordIdxPost; i < iRecordSize && done == false; ++i){
-			/** If I go trough 50 fingerprints from the original list, without finding match, give up */
-			long recordFingerPrint = record.get(i).getFingerprint();
-			int recordTimeStamp = record.get(i).getTimestamp();
-			
-			for (j = iOriginalIdxPost; j < iOriginalSize && j < (iOriginalIdxPost+50) && done == false; ++j){
-				long originalFingerPrint = original.get(j).getFingerprint();
-				int originalTimeStamp = original.get(j).getTimestamp();
+			for (int j = 0; j < iRecordSize; ++j){
+				long rFP = record.get(j).getFingerprint();
+				int rTS = record.get(j).getTimestamp();
 				
-				int timeOffset = originalTimeStamp - recordTimeStamp;
-				if (originalFingerPrint == recordFingerPrint){
-					int idxValue = listOffsets.indexOf(timeOffset);
-					if (idxValue < 0){ /** It's not in the list, yet */
-						listOffsets.add(timeOffset);
-						offsetQtty.add(1);
+				if (rFP == cOriginalFP){
+					int offset = cOriginalTS - rTS;
+					
+					Integer iteratedAmountOff = offsetList.get(offset);
+					if (iteratedAmountOff == null){
+						offsetList.put(offset, 1);
+						if (amountOffset < 1){
+							highestOffset = offset;
+							amountOffset = 1;
+						}
 					}
 					else{
-						int currentOffsetQtty = offsetQtty.get(idxValue) + 1;
-						if (highestAmountOffsetFound < currentOffsetQtty){
-							highestAmountOffsetFound = currentOffsetQtty;
+						int newOffsetAmount = offsetList.get(offset)+1;
+						offsetList.put(offset, newOffsetAmount);
+						if (newOffsetAmount > amountOffset){
+							highestOffset = offset;
+							amountOffset = newOffsetAmount;
 						}
-						offsetQtty.set(idxValue, currentOffsetQtty);
 						
-						if (currentOffsetQtty == OFFSET_MATCH_THRESHOLD){
-							done = true;
-							return highestAmountOffsetFound;
-							
-						}
-//						System.out.println("===============");
-//						for(int k = 0; k < offsetQtty.size(); ++k){
-//							System.out.println("OFFSET: " + listOffsets.get(k) + " >> " + offsetQtty.get(k));
-//						}
 					}
 					
-				
 				}
-				
 			}
-			//iOriginalIdxPost = j;
 		}
 		
-		return highestAmountOffsetFound;
+		Set<Integer> keys = offsetList.keySet();
+		
+//		for (Integer key : keys){
+//			System.out.println("OFFSET: " + key + " >> AMOUNT: " + offsetList.get(key));
+//		}
+		
+		return amountOffset;
 	}
+	
 }
