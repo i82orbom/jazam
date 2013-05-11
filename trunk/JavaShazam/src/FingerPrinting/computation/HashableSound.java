@@ -1,6 +1,7 @@
 package FingerPrinting.computation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import sound.FileSoundDecoder;
 import sound.InputSound;
@@ -56,30 +57,31 @@ public class HashableSound {
 	 */
 	public ArrayList<Long> calculateHashesPerSecond(int iMiliseconds){
 		
-		int bytesToRetrieve = (iMiliseconds*this.requiredBytes1Second)/1000;
 		
 		if (_input != null){
 			ArrayList<Long> hashes = new ArrayList<Long>();
 			
 			byte[] buff = null;
-			while( (buff = _input.getSamples(bytesToRetrieve)) != null ){
-
-				Complex[] fftResult = FastFourierTransform.fourierTransform(byteToShortArray(buff));
-				hashes.add(filterAndHash(fftResult));
-				fftResult = null;
-				buff = null;
+			while( (buff = _input.getSamples(8192)) != null ){
+				//System.out.println("Buff size: " + buff.length);
+				if (buff.length >= 8192){
+					FFT fft = new FFT(FFT.FFT_FORWARD, 4096, FFT.WND_HAMMING);
+					double im[] = new double[buff.length];
+					Arrays.fill(im, 0);
+					double re[] = byteToDouble(buff);
+					fft.transform(re, im);
+					hashes.add(filterAndHash(re,im));		
+				}
 			}
-			this._input = null;
 
 			return hashes;
-			
 		}
 		else
 			throw new RuntimeException("No input specified.");
 	}
 	
-	public short[] byteToShortArray(byte[] array){
-		short[] result = new short[array.length/2];
+	public double[] byteToDouble(byte[] array){
+		double[] result = new double[array.length/2];
 		
 		for(int i = 0; i < result.length;++i){
 			byte lo = array[i*2];
@@ -95,7 +97,7 @@ public class HashableSound {
 	
 
 
-	private long filterAndHash(Complex[] fft){
+	private long filterAndHash(double[] re, double[] im){
 		
 		
 		double[] highscores = new double[RANGE.length-1];
@@ -107,7 +109,7 @@ public class HashableSound {
 		}
 			
 		for (int freq = LOWER_LIMIT; freq < UPPER_LIMIT-1; freq++){
-			double mag = Math.log(fft[freq].abs() +1);
+			double mag = Math.log(Math.hypot(re[freq],im[freq])+1);
 					
 			int index = getIndex(freq);
 					
