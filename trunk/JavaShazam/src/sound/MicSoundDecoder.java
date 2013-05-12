@@ -13,7 +13,6 @@ import javax.sound.sampled.TargetDataLine;
 public class MicSoundDecoder extends InputSound {
 
 
-	private byte[] _residualBuffer;
 	private byte[] _fullBuffer;
 	private int fullBufferIdx;
 
@@ -136,6 +135,12 @@ public class MicSoundDecoder extends InputSound {
 	@Override
 	public float getOutputSampleRate() {
 		return 44100;
+	}
+
+
+	@Override
+	public byte[] getSamples() {
+		return getSamples(4608);
 	}
 
 }
