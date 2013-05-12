@@ -15,7 +15,6 @@ public class CopyOfTest {
 	
 	public static void main(String...args) throws UnsuportedSampleRateException, UnsupportedAudioFileException, IOException, JavaLayerException{
 		String inputFile = "Sehnsucht with Xavier Naidoo.mp3";
-		String outputFile = "converted.wav";
 		
 		//	 Converter cv = new Converter();
 		//Params par = new Params();
