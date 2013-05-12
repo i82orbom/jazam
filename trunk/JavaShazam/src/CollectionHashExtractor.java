@@ -25,7 +25,7 @@ public class CollectionHashExtractor {
 				long currentTime = System.currentTimeMillis();
 
 				HashableSound song = new HashableSound("collection/" + itemInDirectory,false);
-				ArrayList<Long> hashes = song.calculateHashesPerSecond(400); /** 400 ms */
+				ArrayList<Long> hashes = song.computeHashes();
 						
 				song = null;
 				System.out.println("Exec time: " + ((System.currentTimeMillis() - currentTime)/1000.0)/60 + " mins.");

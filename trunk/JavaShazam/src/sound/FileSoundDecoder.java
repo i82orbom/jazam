@@ -18,6 +18,7 @@ public class FileSoundDecoder extends InputSound {
 	private AudioFormat _audioInputFormat;
 	private AudioFormat _decodedFormat;
 	private AudioInputStream _audioInputDecodedStream;
+	private byte[] _residualBuffer;
 	
 	
 
@@ -60,14 +61,11 @@ public class FileSoundDecoder extends InputSound {
 	}
 	
 	public byte[] getSamples(){
-		byte[] abData = new byte[this.BUFFER_SIZE*2];
+		byte[] abData = new byte[this.BUFFER_SIZE];
 		int bytesRead = 0;
 		
 		try{
 			bytesRead = this._audioInputDecodedStream.read(abData,0,abData.length);
-			bytesRead = this._audioInputDecodedStream.read(abData,bytesRead,abData.length);
-			if (bytesRead <= 0)
-				return null;
 		}
 		catch (Exception e){
 			e.printStackTrace();
@@ -79,6 +77,75 @@ public class FileSoundDecoder extends InputSound {
 			return abData;
 		else
 			return null;
+	}
+	
+	public byte[] getSamples(int sampleQtty){
+		/** If there is still some residual data in the buffer, treat it */
+		byte[] buffer = new byte[sampleQtty];
+		int bufferPointer = 0;
+		boolean done = false;
+		
+		/** It's supossed that the residual buffer is always less than the main buffer */
+		if (this._residualBuffer != null){
+			for (int i = 0; i < this._residualBuffer.length; ++i){
+				buffer[bufferPointer] = this._residualBuffer[i];
+				bufferPointer++;
+			}
+			/** 'Flush it' */
+			this._residualBuffer = null;
+		}
+		
+		while (!done){
+			/** Get new sample */
+			byte[] sample = getSamples();
+			
+			if (sample == null){ /** This will happen in the last one */
+				
+				done = true;
+				if (bufferPointer > 0){
+					byte[] rest = new byte[bufferPointer];
+					for (int i = 0; i < rest.length; ++i){
+						rest[i] = buffer[i];
+					}
+					return rest;
+				}
+				else
+					return null;
+			}
+			
+			byte[] mono = toMono(sample);
+			/** Dump it to to buffer */
+			/** Is there room for it? */
+			if (mono.length < (buffer.length - bufferPointer)){
+				/** Dump it! */
+				for (int i = 0 ; i < mono.length; ++i){
+					buffer[bufferPointer] = mono[i];
+					bufferPointer++;
+				}
+			}
+			else{
+				/** Until where can we put?? */
+				int limit = buffer.length - bufferPointer;
+
+				if (limit > 0){
+					int i = 0;
+					for (i = 0; i < limit; ++i){
+						buffer[bufferPointer] = mono[i];
+						bufferPointer++;
+					}
+
+					/** From i till sample.length, dump it to the residual buffer */
+					this._residualBuffer = new byte[mono.length - i];
+					for (int j = 0 ; j < this._residualBuffer.length; ++j){
+						this._residualBuffer[j] = mono[i];
+						i++;
+					}
+				}
+				
+			done = true;
+			}
+		}
+		return buffer;
 	}
 	
 	public byte[] toMono(byte[] stereo){

@@ -102,20 +102,14 @@ public final class FFT
 
   }
 
-  public double[] transform(byte[] re, double[] im, int size){
-	  double []reD = applyWindowFunction(re, size*2);
-	  transform(reD, im, size);
-	  return reD;
-  }
-  
-  public void transform(double[] re, double[] im, int size)
+  public void transform(double[] re, double[] im)
   {
     //check for correct size of the real part data array
-    if(size < windowSize)
+    if(re.length < windowSize)
       throw new IllegalArgumentException("data array smaller than fft window size");
 
     //apply the window function to the real part
-    applyWindowFunction(re,size);
+    applyWindowFunction(re);
 
     //perform the transformation
     switch(transformationType)
@@ -125,40 +119,40 @@ public final class FFT
         if(im.length < windowSize)
           throw new IllegalArgumentException("data array smaller than fft window size");
         else
-          fft(re, im, FFT_FORWARD, size);
+          fft(re, im, FFT_FORWARD);
         break;
       case FFT_INLINE_POWER_PHASE:
         if(im.length < windowSize)
           throw new IllegalArgumentException("data array smaller than fft window size");
         else
-          powerPhaseIFFT(re, im, size);
+          powerPhaseIFFT(re, im);
         break;
       case FFT_MAGNITUDE:
-        magnitudeFFT(re, size);
+        magnitudeFFT(re);
         break;
       case FFT_MAGNITUDE_PHASE:
         if(im.length < windowSize)
           throw new IllegalArgumentException("data array smaller than fft window size");
         else
-          magnitudePhaseFFT(re, im, size);
+          magnitudePhaseFFT(re, im);
         break;
       case FFT_NORMALIZED_POWER:
-        normalizedPowerFFT(re, size);
+        normalizedPowerFFT(re);
         break;
       case FFT_POWER:
-        powerFFT(re, size);
+        powerFFT(re);
         break;
       case FFT_POWER_PHASE:
         if(im.length < windowSize)
           throw new IllegalArgumentException("data array smaller than fft window size");
         else
-          powerPhaseFFT(re, im, size);
+          powerPhaseFFT(re, im);
         break;
       case FFT_REVERSE:
         if(im.length < windowSize)
           throw new IllegalArgumentException("data array smaller than fft window size");
         else
-          fft(re, im, FFT_REVERSE, size);
+          fft(re, im, FFT_REVERSE);
         break;
     }
   }
@@ -173,9 +167,9 @@ public final class FFT
 	 *  @throws IllegalArgumentException if the length of the input data is
 	 *  not a power of 2
 	 */
-	private void fft(double re[], double im[], int direction, int size)
+	private void fft(double re[], double im[], int direction)
   {
-		int n = size;
+		int n = re.length;
 		int bits = (int)Math.rint(Math.log(n) / Math.log(2));
 
 		if (n != (1 << bits))
@@ -238,13 +232,13 @@ public final class FFT
 	/** Computes the power spectrum of a real sequence (in place).
 	 *  @param re the real input and output data; length must be a power of 2
 	 */
-	private void powerFFT(double[] re, int size)
+	private void powerFFT(double[] re)
   {
-		double[] im = new double[size];
+		double[] im = new double[re.length];
 
-		fft(re, im, FFT_FORWARD, size);
+		fft(re, im, FFT_FORWARD);
 
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < re.length; i++)
 			re[i] = re[i] * re[i] + im[i] * im[i];
 	}
 
@@ -252,13 +246,13 @@ public final class FFT
   /** Computes the magnitude spectrum of a real sequence (in place).
    *  @param re the real input and output data; length must be a power of 2
 	 */
-  private void magnitudeFFT(double[] re, int size)
+  private void magnitudeFFT(double[] re)
   {
-    double[] im = new double[size];
+    double[] im = new double[re.length];
 
-    fft(re, im, FFT_FORWARD, size);
+    fft(re, im, FFT_FORWARD);
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < re.length; i++)
       re[i] = Math.sqrt(re[i] * re[i] + im[i] * im[i]);
   }
 
@@ -266,14 +260,14 @@ public final class FFT
   /** Computes the power spectrum of a real sequence (in place).
    *  @param re the real input and output data; length must be a power of 2
    */
-  private void normalizedPowerFFT(double[] re, int size)
+  private void normalizedPowerFFT(double[] re)
   {
-    double[] im = new double[size];
+    double[] im = new double[re.length];
     double r, i;
 
-    fft(re, im, FFT_FORWARD, size);
+    fft(re, im, FFT_FORWARD);
 
-    for (int j = 0; j < size; j++)
+    for (int j = 0; j < re.length; j++)
     {
       r = re[j] / windowFunctionSum * 2;
       i = im[j] / windowFunctionSum * 2;
@@ -287,9 +281,9 @@ public final class FFT
 	 *  @param re the real input (power) and output (magnitude) data; length
 	 *  must be a power of 2
 	 */
-	private void toMagnitude(double[] re, int size)
+	private void toMagnitude(double[] re)
   {
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < re.length; i++)
 			re[i] = Math.sqrt(re[i]);
 	}
 
@@ -302,11 +296,11 @@ public final class FFT
 	 *  @param im the imaginary part of the input data and the phase of the
 	 *  output data
 	 */
-	private void powerPhaseFFT(double[] re, double[] im, int size)
+	private void powerPhaseFFT(double[] re, double[] im)
   {
-		fft(re, im, FFT_FORWARD, size);
+		fft(re, im, FFT_FORWARD);
 
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < re.length; i++)
     {
 			double pow = re[i] * re[i] + im[i] * im[i];
 			im[i] = Math.atan2(im[i], re[i]);
@@ -323,9 +317,9 @@ public final class FFT
 	 *  @param ph the phase of the spectral input data (and the imaginary part
 	 *  of the output data)
 	 */
-	private void powerPhaseIFFT(double[] pow, double[] ph, int size)
+	private void powerPhaseIFFT(double[] pow, double[] ph)
   {
-		toMagnitude(pow,size);
+		toMagnitude(pow);
 
 		for (int i = 0; i < pow.length; i++)
     {
@@ -334,7 +328,7 @@ public final class FFT
 			pow[i] = re;
 		}
 
-		fft(pow, ph, FFT_REVERSE, size);
+		fft(pow, ph, FFT_REVERSE);
 	}
 
 
@@ -346,10 +340,10 @@ public final class FFT
 	 *  @param im the imaginary part of the input data and the phase of the
 	 *  output data
 	 */
-	private void magnitudePhaseFFT(double[] re, double[] im, int size)
+	private void magnitudePhaseFFT(double[] re, double[] im)
   {
-		powerPhaseFFT(re, im, size);
-		toMagnitude(re, size);
+		powerPhaseFFT(re, im);
+		toMagnitude(re);
 	}
 
 
@@ -552,37 +546,14 @@ public final class FFT
 	 *  @param data   the array of input data, also used for output
 	 *  @param window the values of the window function to be applied to data
 	 */
-	private void applyWindowFunction(double[] data, int size)
+	private void applyWindowFunction(double[] data)
   {
 		if(windowFunctionType != WND_NONE)
     {
-      for (int i = 0; i < size; i++)
+      for (int i = 0; i < data.length; i++)
         data[i] *= windowFunction[i];
     }
 	}
-
-	
-	private double[] applyWindowFunction(byte[] data, int size){
-		
-		if (windowFunctionType != WND_NONE){
-			double[] res = new double[size/2];
-
-			for (int i = 0; i < res.length; ++i){
-				byte lo = data[i*2];
-				byte hi = data[i*2+1];
-				short val=(short)( ((hi&0xFF)<<8) | (lo&0xFF) );
-
-				res[i] = val;
-				res[i] *= windowFunction[i];
-			}
-			return res;
-		}
-		
-		return null;
-	}
-	
-	
-	
 
   private void calculateWindowFunctionSum()
   {
