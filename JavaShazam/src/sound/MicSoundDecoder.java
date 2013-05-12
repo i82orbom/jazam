@@ -64,7 +64,7 @@ public class MicSoundDecoder extends InputSound {
 		
 		MicrophoneSampling gb = new MicrophoneSampling();
 		gb.setSource(line);
-		gb.setDuration(1000);
+		gb.setDuration(30);
 		
 		Thread th = new Thread(gb);
 		th.run();
@@ -83,14 +83,11 @@ public class MicSoundDecoder extends InputSound {
 		private TargetDataLine source = null;
 		private int bufferSize = 4092;
 		private OutputStream out;
-		private int duration = 1;
-		
-		public int getDuration() {
-			return duration;
-		}
+		private int duration;
+	
 
 		public void setDuration(int duration) {
-			this.duration = duration;
+			this.duration = duration*1000;
 		}
 
 		public byte[] getSample() {
@@ -109,10 +106,10 @@ public class MicSoundDecoder extends InputSound {
 			
 			out = new ByteArrayOutputStream();
 			boolean running = true;
+			long startTime = System.currentTimeMillis();
 			
 			byte[] buffer = new byte[bufferSize];
 		
-			int times = 0;
 			try{
 				while (running){
 					int count = source.read(buffer, 0, bufferSize);
@@ -120,10 +117,11 @@ public class MicSoundDecoder extends InputSound {
 						out.write(buffer, 0, count);
 					}
 					
-					times++;
+					long currentTime = System.currentTimeMillis();
 					
-					if (times == duration)
+					if (currentTime-startTime >= this.duration)
 						running = false;
+					
 				}
 			}
 			catch (IOException e){
@@ -140,7 +138,7 @@ public class MicSoundDecoder extends InputSound {
 
 	@Override
 	public byte[] getSamples() {
-		return getSamples(4608);
+		return getSamples(9216);
 	}
 
 }

@@ -20,6 +20,7 @@ public class HashableSound {
 
 	private int[] RANGE = new int[]{LOWER_LIMIT,80,120,180, UPPER_LIMIT+1};
 
+	private int requiredBytes1Second;
 	
 	private InputSound _input = null;
 	
@@ -35,27 +36,40 @@ public class HashableSound {
 			e.printStackTrace();
 		}
 		
+		switch((int)this._input.getOutputSampleRate()){
+		
+		case 44100:
+				this.requiredBytes1Second = 176375;
+			break;
+			
+		case 22050:
+				this.requiredBytes1Second = 88187;
+			break;
+			
+		default:
+			throw new  UnsuportedSampleRateException((int)this._input.getOutputSampleRate());
+		}
 	}
 	
 	/** 
 	 * Calculate _input sound hashes
 	 * @param iSecondStep specifies how many seconds would be in a single sample
 	 */
-	public ArrayList<Long> calculateHashesPerSecond(int iMiliseconds){
+	public ArrayList<Long> computeHashes(){
 		
 		
 		if (_input != null){
 			ArrayList<Long> hashes = new ArrayList<Long>();
-			//(buff = _input.getSamples(8192))
+			
 			byte[] buff = null;
-			while( (buff = _input.getSamples()) != null ){
-			//	System.out.println("buff length: " + buff.length);
+			while( (buff = _input.getSamples(8192)) != null ){
+				//System.out.println("Buff size: " + buff.length);
 				if (buff.length >= 8192){
 					FFT fft = new FFT(FFT.FFT_FORWARD, 4096, FFT.WND_HAMMING);
 					double im[] = new double[buff.length];
 					Arrays.fill(im, 0);
-
-					double re[] = fft.transform(buff, im, 4096);
+					double re[] = byteToDouble(buff);
+					fft.transform(re, im);
 					hashes.add(filterAndHash(re,im));		
 				}
 			}
@@ -66,6 +80,22 @@ public class HashableSound {
 			throw new RuntimeException("No input specified.");
 	}
 	
+	public double[] byteToDouble(byte[] array){
+		double[] result = new double[array.length/2];
+		
+		for(int i = 0; i < result.length;++i){
+			byte lo = array[i*2];
+			byte hi = array[i*2+1];
+			
+			short val=(short)( ((hi&0xFF)<<8) | (lo&0xFF) );
+
+			result[i] = val;
+		}
+		
+		return result;
+	}
+	
+
 
 	private long filterAndHash(double[] re, double[] im){
 		

@@ -15,7 +15,7 @@ public class MicTest {
 	
 		HashableSound hs = new HashableSound(null,true);
 		
-		ArrayList<Long> hashes = hs.calculateHashesPerSecond(400); /** 400 ms */
+		ArrayList<Long> hashes = hs.computeHashes(); 
 		String outputXMLFile = "rec.xml";
 		MPEG7Description description = new MPEG7Description();
 		try {
