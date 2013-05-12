@@ -18,7 +18,7 @@ public class Test {
 //String inputFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.mp3";
 	//String outputXMLFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.xml";
 	
-   String inputFile = "Wait In Vain (Avicii Remix).m3";
+   String inputFile = "Wait In Vain (Avicii Remix).mp3";
    String outputXMLFile = "Wait In Vain (Avicii Remix).xml";
 	
 //String inputFile = "Wait In Vain (Avicii Remix)_crop.mp3";
