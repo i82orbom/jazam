@@ -18,9 +18,9 @@ public class CollectionHashExtractor {
 		String inputFolder = "collection/";
 		File rootDirectory = new File(inputFolder);
 		String[] itemsInDirectory = rootDirectory.list();
-		
+		int currentIDX = 0;
 		for (String itemInDirectory : itemsInDirectory){
-			System.err.println("Analyzing: " + itemInDirectory);
+			System.err.print("Analyzing: " + itemInDirectory + " " +  currentIDX +"/" + itemsInDirectory.length + " -> ");
 			if (itemInDirectory.endsWith(".mp3")){
 				long currentTime = System.currentTimeMillis();
 
@@ -33,8 +33,8 @@ public class CollectionHashExtractor {
 				MPEG7Description description = new MPEG7Description();
 				try {
 					description.createNewFile(outputFolder + itemInDirectory.substring(0, itemInDirectory.indexOf(".mp3"))+".xml");
-					description.setAudioInfo("2", itemInDirectory);
-					description.setTimeStampStep(400);
+					description.setAudioInfo(new String(""+currentIDX), itemInDirectory);
+					description.setTimeStampStep(20);
 					description.setFingerPrint(hashes);
 					hashes = null;
 					description.write();
@@ -44,7 +44,7 @@ public class CollectionHashExtractor {
 				} catch (TransformerException e) {
 					e.printStackTrace();
 				}
-				Runtime.getRuntime().gc();
+				currentIDX++;
 			}
 			
 		}

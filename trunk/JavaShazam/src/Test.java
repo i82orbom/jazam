@@ -1,4 +1,6 @@
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,8 +14,8 @@ import FingerPrinting.description.MPEG7Description;
 public class Test {
 	
 	public static void main(String...args) throws UnsuportedSampleRateException, FileNotFoundException{
-	//String inputFile = "Sehnsucht with Xavier Naidoo.mp3";
-	//String outputXMLFile = "Sehnsucht with Xavier Naidoo.xml";
+//	String inputFile = "Sehnsucht with Xavier Naidoo.mp3";
+//	String outputXMLFile = "Sehnsucht with Xavier Naidoo.xml";
 		
 //String inputFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.mp3";
 	//String outputXMLFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.xml";
@@ -24,8 +26,12 @@ public class Test {
 //String inputFile = "Wait In Vain (Avicii Remix)_crop.mp3";
 //String outputXMLFile = "Wait In Vain (Avicii Remix)_crop.xml";
 	
-//		String inputFile = "rec.mp3";
-	//	String outputXMLFile = "rec.xml";
+	//String inputFile = "rec.mp3";
+	//String outputXMLFile = "rec.xml";
+		
+	//	String inputFile = "1-05 Clocks.mp3";
+	//	String outputXMLFile = "1-05 Clocks.xml";
+		
 		long currentTime = System.currentTimeMillis();
 
 		HashableSound song = new HashableSound(inputFile,false);
@@ -47,6 +53,13 @@ public class Test {
 			e.printStackTrace();
 		}
 		
+	/*	double[] fourier = song.getFourierArray();
+		
+		PrintWriter pw = new PrintWriter(new File("fourier.txt"));
+		
+		for (int i = 0; i < fourier.length - 1; ++i){
+			pw.println(i+","+fourier[i]);
+		}*/
 		
 	}
 }

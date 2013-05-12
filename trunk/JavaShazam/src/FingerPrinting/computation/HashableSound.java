@@ -24,7 +24,11 @@ public class HashableSound {
 	
 	private InputSound _input = null;
 	
+	private double[] fourier;
+	
 	public HashableSound(String fileName, boolean mic) throws UnsuportedSampleRateException {
+		fourier = new double[4096];
+		Arrays.fill(fourier, 0);
 		try {
 			if (mic)
 				this._input = new MicSoundDecoder();
@@ -70,6 +74,7 @@ public class HashableSound {
 					Arrays.fill(im, 0);
 					double re[] = byteToDouble(buff);
 					fft.transform(re, im);
+			//		fillFourierArray(re, im);
 					hashes.add(filterAndHash(re,im));		
 				}
 			}
@@ -123,6 +128,13 @@ public class HashableSound {
 		return hash(recordPoints);
 	}
 	
+	private void fillFourierArray(double re[], double[]im){
+		for (int i = 0; i < re.length; ++i){
+			double value = Math.log(Math.hypot(re[i], im[i]));
+			this.fourier[i] += value;
+		}
+	}
+	
 	private long hash(int []p){
 		int multiplyFactor = 100;
 		int currentMultiplier = 1;
@@ -143,5 +155,9 @@ public class HashableSound {
 			i++;
 		}
 		return i;	
+	}
+	
+	public double[] getFourierArray(){
+		return this.fourier;
 	}
 }

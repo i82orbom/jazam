@@ -19,7 +19,6 @@ public class MatchAgainstCollection {
 		try {
 			record.loadFromFile("rec.xml");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
