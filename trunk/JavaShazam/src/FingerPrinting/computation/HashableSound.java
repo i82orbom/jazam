@@ -20,7 +20,6 @@ public class HashableSound {
 
 	private int[] RANGE = new int[]{LOWER_LIMIT,80,120,180, UPPER_LIMIT+1};
 
-	private int requiredBytes1Second;
 	
 	private InputSound _input = null;
 	
@@ -36,19 +35,6 @@ public class HashableSound {
 			e.printStackTrace();
 		}
 		
-		switch((int)this._input.getOutputSampleRate()){
-		
-		case 44100:
-				this.requiredBytes1Second = 176375;
-			break;
-			
-		case 22050:
-				this.requiredBytes1Second = 88187;
-			break;
-			
-		default:
-			throw new  UnsuportedSampleRateException((int)this._input.getOutputSampleRate());
-		}
 	}
 	
 	/** 

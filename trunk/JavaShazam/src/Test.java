@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import javazoom.jl.converter.Converter;
-import javazoom.jl.decoder.Decoder.Params;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.decoder.OutputChannels;
 import sound.exceptions.UnsuportedSampleRateException;
 import FingerPrinting.computation.HashableSound;
 import FingerPrinting.description.MPEG7Description;
@@ -15,21 +11,21 @@ import FingerPrinting.description.MPEG7Description;
 
 public class Test {
 	
-	public static void main(String...args) throws UnsuportedSampleRateException, FileNotFoundException, JavaLayerException{
+	public static void main(String...args) throws UnsuportedSampleRateException, FileNotFoundException{
 	//String inputFile = "Sehnsucht with Xavier Naidoo.mp3";
 	//String outputXMLFile = "Sehnsucht with Xavier Naidoo.xml";
 		
 //String inputFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.mp3";
 	//String outputXMLFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.xml";
 	
-   // String inputFile = "Wait In Vain (Avicii Remix).mp3";
-//	String outputXMLFile = "Wait In Vain (Avicii Remix).xml";
+   String inputFile = "Wait In Vain (Avicii Remix).mp3";
+   String outputXMLFile = "Wait In Vain (Avicii Remix).xml";
 	
 //String inputFile = "Wait In Vain (Avicii Remix)_crop.mp3";
 //String outputXMLFile = "Wait In Vain (Avicii Remix)_crop.xml";
 	
-		String inputFile = "rec.mp3";
-		String outputXMLFile = "rec.xml";
+//		String inputFile = "rec.mp3";
+	//	String outputXMLFile = "rec.xml";
 		long currentTime = System.currentTimeMillis();
 
 		HashableSound song = new HashableSound(inputFile,false);

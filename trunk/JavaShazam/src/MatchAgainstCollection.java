@@ -1,13 +1,7 @@
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import sound.exceptions.UnsuportedSampleRateException;
-
-import FingerPrinting.computation.HashableSound;
 import FingerPrinting.computation.matching.DataPoint;
 import FingerPrinting.computation.matching.Matcher;
 import FingerPrinting.description.MPEG7Description;

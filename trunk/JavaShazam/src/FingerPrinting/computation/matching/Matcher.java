@@ -2,7 +2,6 @@ package FingerPrinting.computation.matching;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Matcher {
 
@@ -50,7 +49,7 @@ public class Matcher {
 			}
 		}
 		
-		Set<Integer> keys = offsetList.keySet();
+	//	Set<Integer> keys = offsetList.keySet();
 		
 //		for (Integer key : keys){
 //			System.out.println("OFFSET: " + key + " >> AMOUNT: " + offsetList.get(key));
