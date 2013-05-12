@@ -1,12 +1,13 @@
 package FingerPrinting.computation.matching;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
 public class Matcher {
 
 	public static int match(List<DataPoint> original, List<DataPoint> record){
-		
+	
 		int highestOffset = -1;
 		int amountOffset = 0;
 		
@@ -19,7 +20,7 @@ public class Matcher {
 		for (int i = 0; i < iOriginalSize; ++i){
 			long cOriginalFP = original.get(i).getFingerprint();
 			int cOriginalTS = original.get(i).getTimestamp();
-			
+
 			for (int j = 0; j < iRecordSize; ++j){
 				long rFP = record.get(j).getFingerprint();
 				int rTS = record.get(j).getTimestamp();
