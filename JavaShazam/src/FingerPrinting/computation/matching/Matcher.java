@@ -18,6 +18,7 @@ public class Matcher {
 		int iRecordSize = record.size();
 		
 		for (int i = 0; i < iOriginalSize; ++i){
+			/** to add request to exist DB **/
 			long cOriginalFP = original.get(i).getFingerprint();
 			int cOriginalTS = original.get(i).getTimestamp();
 
