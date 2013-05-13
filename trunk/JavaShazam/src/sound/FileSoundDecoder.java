@@ -85,7 +85,7 @@ public class FileSoundDecoder extends InputSound {
 		int bufferPointer = 0;
 		boolean done = false;
 		
-		/** It's supossed that the residual buffer is always less than the main buffer */
+		/** It's supposed that the residual buffer is always less than the main buffer */
 		if (this._residualBuffer != null){
 			for (int i = 0; i < this._residualBuffer.length; ++i){
 				buffer[bufferPointer] = this._residualBuffer[i];
