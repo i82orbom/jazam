@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import FingerPrinting.computation.matching.DataPoint;
@@ -7,7 +8,7 @@ import FingerPrinting.description.MPEG7Description;
 
 public class MatchingTest {
 
-	public static void main(String...args){
+	public static void main(String...args) throws FileNotFoundException{
 		
 		MPEG7Description original = new MPEG7Description();
 		MPEG7Description record = new MPEG7Description();
