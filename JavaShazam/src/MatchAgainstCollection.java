@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import sound.exceptions.UnsuportedSampleRateException;
@@ -11,7 +12,7 @@ public class MatchAgainstCollection {
 	
 	private static List<DataPoint> recordData;
 
-	public static void main (String...args) throws UnsuportedSampleRateException{
+	public static void main (String...args) throws UnsuportedSampleRateException, FileNotFoundException{
 		
 		String inputFolder = "hashes/";
 		
@@ -29,7 +30,7 @@ public class MatchAgainstCollection {
 	}
 	
 
-	public static void match(File rootDirectory) throws UnsuportedSampleRateException{
+	public static void match(File rootDirectory) throws UnsuportedSampleRateException, FileNotFoundException{
 		String[] itemsInDirectory = rootDirectory.list();
 		
 		for (String itemInDirectory:itemsInDirectory){

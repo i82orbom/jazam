@@ -20,14 +20,14 @@ public class Test {
 //String inputFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.mp3";
 	//String outputXMLFile = "sub_(40-60)_Sehnsucht with Xavier Naidoo.xml";
 	
-   String inputFile = "Wait In Vain (Avicii Remix).mp3";
-   String outputXMLFile = "Wait In Vain (Avicii Remix).xml";
+//   String inputFile = "Wait In Vain (Avicii Remix).mp3";
+  // String outputXMLFile = "Wait In Vain (Avicii Remix).xml";
 	
 //String inputFile = "Wait In Vain (Avicii Remix)_crop.mp3";
 //String outputXMLFile = "Wait In Vain (Avicii Remix)_crop.xml";
 	
-	//String inputFile = "rec.mp3";
-	//String outputXMLFile = "rec.xml";
+	String inputFile = "rec.mp3";
+	String outputXMLFile = "rec.xml";
 		
 	//	String inputFile = "1-05 Clocks.mp3";
 	//	String outputXMLFile = "1-05 Clocks.xml";

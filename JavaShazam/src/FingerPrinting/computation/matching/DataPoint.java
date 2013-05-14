@@ -1,6 +1,8 @@
 package FingerPrinting.computation.matching;
 
-public class DataPoint {
+import java.io.Serializable;
+
+public class DataPoint implements Serializable{
 
 	private long fingerprint;
 	public long getFingerprint() {

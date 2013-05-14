@@ -57,7 +57,6 @@ public class HashableSound {
 	
 	/** 
 	 * Calculate _input sound hashes
-	 * @param iSecondStep specifies how many seconds would be in a single sample
 	 */
 	public ArrayList<Long> computeHashes(){
 		
@@ -127,13 +126,7 @@ public class HashableSound {
 		
 		return hash(recordPoints);
 	}
-	
-	private void fillFourierArray(double re[], double[]im){
-		for (int i = 0; i < re.length; ++i){
-			double value = Math.log(Math.hypot(re[i], im[i]));
-			this.fourier[i] += value;
-		}
-	}
+
 	
 	private long hash(int []p){
 		int multiplyFactor = 100;
