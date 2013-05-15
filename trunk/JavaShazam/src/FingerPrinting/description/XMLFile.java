@@ -28,6 +28,9 @@ public class XMLFile {
 	public XMLFile (){
 	}
 	
+	public void setOutputFileName(String output){
+		this._outputFileName = output;
+	}
 	public void createNewFile(String outputFileName) throws ParserConfigurationException{
 		this._outputFileName = outputFileName;
 		
