@@ -34,7 +34,6 @@ public class HashableSound {
 				this._input = new MicSoundDecoder();
 			else
 				this._input = new FileSoundDecoder(fileName);
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
